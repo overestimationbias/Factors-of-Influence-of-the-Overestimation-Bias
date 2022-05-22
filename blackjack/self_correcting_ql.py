@@ -10,7 +10,7 @@ def printQ(Q):
                 print("sum:",sum,"upcard:",upcard,"ace:",ace,"Stick:",Q[sum][upcard][ace][0], "Hit:", Q[sum][upcard][ace][1])
 
 
-def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=4):
+def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=1):
     #Load the environment
     env = gym.make('Blackjack-v1')
     # Set learning parameters

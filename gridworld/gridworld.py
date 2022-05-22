@@ -30,7 +30,7 @@ SARSA = 5
 EXPECTED_SARSA = 6
 SELF_CORRECTING = 7 
 
-#new_state takes as input a state and an action and returns the new state 
+#new_state takes as input a state and an action and returns the new state according to the deterministic state transition
 def new_state(state, action):
     if state == 2:
         return 6
@@ -67,6 +67,7 @@ def greedy_choice(Q,state):
     max_value = max(Q[state])
     return Q[state].index(max_value)
 
+#implements the expected sarsa function
 def expected_sarsa(Q, state, epsilon):
     sum = 0
     for i in range(4):
@@ -74,7 +75,7 @@ def expected_sarsa(Q, state, epsilon):
         else: sum += 1/4*epsilon*Q[state][i]
     return sum
 
-#solved_Q takes as input a Q table and prints if the Q table leads to a correct optimal path. 
+#solved_Q takes as input a Q table and returns true if the Q table leads to a correct optimal path. 
 def solved_Q(Q):
     state = 6
     moves = 0
@@ -98,7 +99,7 @@ def show_moves(Q):
         if choice == 3: print("L",end ='')
         if state in [2,5,8]: print(" ")
 
-#prints a Q-Table
+#prints the values of a Q-Table
 def printQ(Q):
     print("UP, RIGHT, DOWN, LEFT")
     for count, value in enumerate(Q):

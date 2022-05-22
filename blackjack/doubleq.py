@@ -32,8 +32,8 @@ def run(num_episodes = 20000, y = .95):
             dealer=s[1]
             if s[2] == False: ace=0
             if s[2] == True: ace=1
-            epsilon = 1/np.sqrt(np.sum(times_visited[sum,dealer,ace])+1)
-            #epsilon = 0.1
+            #epsilon = 1/np.sqrt(np.sum(times_visited[sum,dealer,ace])+1)
+            epsilon = 0.1
             a = np.argmax(Qsum[sum,dealer,ace,:])
             if np.random.rand()<epsilon:
                 a = random.choice([0,1])

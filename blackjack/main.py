@@ -50,14 +50,10 @@ def run(name, function):
     return (results, overestimations_avg, error)
     
 
-np.save("standard2", run(name="standard", function= lambda: regularq.run(num_episodes,y=1)))
-np.save("low_y2", run(name="low y", function= lambda: regularq.run(num_episodes,y=0.6)))
-np.save("lr_052", run(name="lr 0.05", function= lambda: regularq.run(num_episodes,y=1, fixed_alpha=True, alpha=0.05)))
-np.save("double_q2", run(name="double q", function= lambda: doubleq.run(num_episodes,y=1)))
-np.save("avgr2", run(name="avgr", function= lambda: avgr.run(num_episodes,y=1)))
-np.save("SCQL2", run(name="SCQL", function= lambda: self_correcting_ql.run(num_episodes,y=1)))
-
-#run(name="range 5", color="red",function= lambda: avgr2.run(num_episodes,avg_range=5))
-#run(name="range 10", color="blue",function= lambda: avgr2.run(num_episodes,avg_range=10))
-
+np.save("standard_eps01", run(name="standard", function= lambda: regularq.run(num_episodes,y=1)))
+np.save("low_y_eps01", run(name="low y", function= lambda: regularq.run(num_episodes,y=0.6)))
+np.save("lr_05_eps01", run(name="lr 0.05", function= lambda: regularq.run(num_episodes,y=1, fixed_alpha=True, alpha=0.05)))
+np.save("double_q_eps01", run(name="double q", function= lambda: doubleq.run(num_episodes,y=1)))
+np.save("avgr_eps01", run(name="avgr", function= lambda: avgr.run(num_episodes,y=1)))
+np.save("SCQL_eps01", run(name="SCQL", function= lambda: self_correcting_ql.run(num_episodes,y=1)))
 

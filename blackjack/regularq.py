@@ -39,8 +39,8 @@ def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05):
             if s[2] == True: ace=1
             times_visited[sum,dealer,ace] +=1
             a = np.argmax(Q[sum,dealer,ace,:])
-            epsilon = 1/np.sqrt(times_visited[sum,dealer,ace]+1)
-            #epsilon = 0.1
+            #epsilon = 1/np.sqrt(times_visited[sum,dealer,ace]+1)
+            epsilon = 0.1
             if random.random()<epsilon:
                 a = random.choice([0,1])
             #Get new state and reward from environment

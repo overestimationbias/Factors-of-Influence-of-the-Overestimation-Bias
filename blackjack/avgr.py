@@ -35,24 +35,20 @@ def run(num_episodes = 20000, avg_range = 10, y = .9):
             if s[2] == False: ace=0
             if s[2] == True: ace=1
             a = np.argmax(Q[sum,dealer,ace,:])
-            epsilon = 1/np.sqrt(np.sum(times_visited[sum,dealer,ace])+1)
-            #epsilon = 0.1
+            #epsilon = 1/np.sqrt(np.sum(times_visited[sum,dealer,ace])+1)
+            epsilon = 0.1
             if random.random()<epsilon:
                 if a == 1: a=0
                 else: a = 1
             times_visited[sum,dealer,ace,a] +=1
             #Get new state and reward from environment
             next_state,r,d,_ = env.step(a)
-            """if times_visited[sum,dealer,ace,a] <= avg_range:
-                avg_r[sum,dealer,ace,a] += (r-avg_r[sum,dealer,ace,a])/times_visited[sum,dealer,ace,a]
-            else:"""
             avg_r[sum,dealer,ace,a] += (r-avg_r[sum,dealer,ace,a])/avg_range
             if next_state[2] == False: next_ace=0
             if next_state[2] == True: next_ace=1
             #print("sum:",sum,"dealer:", dealer,"ace:", ace, "action:",a,"next_state:", next_state,"r:", r,"d:", d)
             #Update Q-Table with new knowledge
-            alpha = 0.05
-            #alpha = 1/times_visited[sum,dealer,ace,a]
+            alpha = 1/times_visited[sum,dealer,ace,a]
             if times_visited[sum,dealer,ace,a] > avg_range and d==True:
                 Q[sum,dealer,ace,a] += alpha*(avg_r[sum,dealer,ace,a]-Q[sum,dealer,ace,a])
             elif times_visited[sum,dealer,ace,a] > avg_range:
@@ -66,7 +62,6 @@ def run(num_episodes = 20000, avg_range = 10, y = .9):
             s = next_state
             if d == True:
                 break
-        #jList.append(j)
         rList.append(rAll)
     #print(Q)
     #np.savetxt('data.csv', Q, delimiter=',')

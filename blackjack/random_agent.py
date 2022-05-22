@@ -10,18 +10,15 @@ def run():
     rList = []
     for i in range(num_episodes):
         #Reset environment and get first new observation
-        s = env.reset()
+        _ = env.reset()
         rAll = 0
         d = False
         j = 0
-        #The Q-Table learning algorithm
         while j < 99:
             j+=1
-            #Choose an action by greedily (with noise) picking from Q table
             a = np.random.choice([0,1])
-            next_state,r,d,_ = env.step(a)
+            _,r,d,_ = env.step(a)
             rAll += r
-            s = next_state
             if d == True:
                 break
         rList.append(rAll)

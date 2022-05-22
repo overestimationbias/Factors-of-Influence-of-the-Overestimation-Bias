@@ -242,7 +242,7 @@ n_action = env.action_space.n
 # Number of episodes
 episodes = 500
 # Number of experiments
-experiments = 3
+experiments = 100
 
 def run(env, lr = 0.0001, gamma=.999):
     # Run experiment
@@ -283,6 +283,6 @@ def SCQLrun(env, lr = 0.0001, gamma=.999):
     data=[rewards,starting_states]
     return data
 
-#save files with configuration here:
-np.save("./data/acrobot_lr000001_y9", run(env,lr=0.000001,gamma=.9))
+#MAIN: run and save files with configuration here:
+np.save("./data/acrobot_lr000001_y9", run(env,lr=0.0001,gamma=.97))
 
