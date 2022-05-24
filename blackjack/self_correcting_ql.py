@@ -10,13 +10,14 @@ def printQ(Q):
                 print("sum:",sum,"upcard:",upcard,"ace:",ace,"Stick:",Q[sum][upcard][ace][0], "Hit:", Q[sum][upcard][ace][1])
 
 
-def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=1):
+def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=4):
     #Load the environment
     env = gym.make('Blackjack-v1')
     # Set learning parameters
     #create lists to contain total rewards and steps per episode
     rList = []
     Qtable = []
+    rSum = 0
     Q = np.zeros([32,11,2,2])
     Qprevious = np.zeros([32,11,2,2])
     Qbeta = np.zeros([32,11,2,2])
@@ -28,7 +29,7 @@ def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=1):
         #print("new ep")
         #Reset environment and get first new observation
         s = env.reset()
-        rAll = 0
+        rEpisode = 0
         d = False
         j = 0
         #The Q-Table learning algorithm
@@ -41,8 +42,8 @@ def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=1):
             if s[2] == True: ace=1
             times_visited[sum,dealer,ace] +=1
             a = np.argmax(Q[sum,dealer,ace,:])
-            #epsilon = 1/np.sqrt(times_visited[sum,dealer,ace]+1)
-            epsilon = 0.1
+            epsilon = 1/np.sqrt(times_visited[sum,dealer,ace]+1)
+            #epsilon = 0.1
             if random.random()<epsilon:
                 a = random.choice([0,1])
             #Get new state and reward from environment
@@ -60,12 +61,13 @@ def run(num_episodes = 20000, y=.9, fixed_alpha = False, alpha=0.05, beta=1):
             else: 
                 Q[sum,dealer,ace,a] = Q[sum,dealer,ace,a] + alpha*(r-Q[sum,dealer,ace,a])
             Qtable.append(Q)
-            rAll += r
+            rEpisode += r
             if r == 1: wins += 1
             elif r == 0: ties +=1
             elif r == -1: losses +=1
             s = next_state
             if d == True:
                 break
-        rList.append(rAll)
+        rSum += rEpisode
+        rList.append(rSum/(i+1))
     return rList, wins, Qtable, functions.deviationFromBS(Q)

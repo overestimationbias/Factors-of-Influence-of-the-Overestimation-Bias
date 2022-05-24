@@ -1,8 +1,14 @@
 import gym
 import numpy as np
 import random
+from scipy.stats import sem
+import functions
 
-def run(num_episodes = 20000):
+no_of_experiments = 10
+num_episodes = 100000
+smoothing = 7000
+
+def BS_run(num_episodes = 20000):
     #Load the environment
     env = gym.make('Blackjack-v1')
     #create lists to contain total rewards and steps per episode
@@ -45,3 +51,37 @@ def run(num_episodes = 20000):
         rList.append(rAll)
         if r == 1: wins+=1
     return rList, wins
+
+
+def perform(function):
+    return function()
+
+def run(name, function):
+    results = []
+    final_average = []
+    win_percentage = []
+    deviations = []
+    overestimations = []
+    overestimation = []
+    for i in range (no_of_experiments):
+        print(i)
+        data, wins = perform(function)
+        data = list(functions.moving_average(data,smoothing))
+        data = np.round(data, 4)
+        results.append(data)
+        win_percentage.append(wins)
+        final_average.append(data[-1])  
+        #functions.make_table(Q)
+        #functions.printStrategy(Q)
+        #functions.printQ(Q)
+        #functions.deviationFromBS(Q)
+        #print(f"{name} {i}: wins:  {wins}, deviations: {deviation}, overestimation:{overestimation}")
+    error = sem(final_average)
+    results = np.average(results, axis=0)
+    overestimations = list(zip(*overestimations))
+    overestimations_avg = [np.mean(x) for x in overestimations]
+    print(f"{name}: average win rate: {np.mean(win_percentage)/num_episodes}, average deviations: {np.mean(deviations)}")
+    return (results, overestimations_avg, error)
+
+
+np.save("50_100k_optimum", run(name="optimum", function = lambda: BS_run(num_episodes)))
