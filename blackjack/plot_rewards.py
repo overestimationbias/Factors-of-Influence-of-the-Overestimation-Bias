@@ -1,8 +1,10 @@
 import numpy as np 
-import matplotlib.pyplot as plt
-from scipy.stats import sem
+import matplotlib.pyplot as mpl
 
-plt.grid()
+
+fig, ax = mpl.subplots()
+axins = ax.inset_axes([0.4, 0.1, 0.5, 0.5])
+mpl.grid()
 x = np.linspace(0, 100000, 100000)
 
 def smoothen(x, w=300):
@@ -19,8 +21,20 @@ def plot(data, color, name):
     results = smoothen(results)
     upper_avg = smoothen(upper_avg)
     lower_avg = smoothen(lower_avg)
-    plt.plot(x, results, c=color,linestyle='solid', label=name)
-    plt.fill_between(x, lower_avg, upper_avg, alpha=.3, linewidth=0, color= color)
+    mpl.plot(x, results, c=color,linestyle='solid', label=name)
+    mpl.fill_between(x, lower_avg, upper_avg, alpha=.3, linewidth=0, color= color)
+
+def zoomed_plot(data, color, name):
+    results, _, reward_error, _ = data
+    lower_avg = results - reward_error
+    upper_avg = results + reward_error
+    results = smoothen(results)
+    upper_avg = smoothen(upper_avg)
+    lower_avg = smoothen(lower_avg)
+    
+    mpl.grid()
+    axins.plot(x, results, c=color,linestyle='solid', label=name)
+    axins.fill_between(x, lower_avg, upper_avg, alpha=.3, linewidth=2, color= color)
 
 plot(np.load("./data/standard.npy", allow_pickle=True), "blue", "standard")
 plot(np.load("./data/low_y.npy", allow_pickle=True), "grey", "low_y")
@@ -29,9 +43,23 @@ plot(np.load("./data/double_q.npy", allow_pickle=True), "green", "double q")
 plot(np.load("./data/avgr.npy", allow_pickle=True), "purple", "avg r")
 plot(np.load("./data/SCQL.npy", allow_pickle=True), "yellow", "SCQL")
 
+zoomed_plot(np.load('./data/standard.npy', allow_pickle=True), "blue", "QL")
+zoomed_plot(np.load('./data/low_y.npy', allow_pickle=True), "cyan", r"$\gamma=0.6$")
+zoomed_plot(np.load('./data/lr_05.npy', allow_pickle=True), "red", r"$\alpha= 0.05$")
+zoomed_plot(np.load('./data/double_q.npy', allow_pickle=True), "green", "DQL")
+zoomed_plot(np.load('./data/avgr.npy', allow_pickle=True), "purple", "$\hat{r}$")
+zoomed_plot(np.load('./data/SCQL.npy', allow_pickle=True), "yellow", "SCQL")
 
-plt.title(r'Performance of difference algorithms')
-plt.axhline(y = -0.0451, color = 'black', linestyle = '--')
-plt.text(s="optimum",y=-0.053, x=0)
-plt.legend(loc='lower right', ncol=3)
-plt.show()
+
+ax.axhline(y = -0.0451, color = 'black', linestyle = '--', label='Basic Strategy')
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+x1, x2, y1, y2 = 80000, 100000, -0.12, -0.08
+axins.set_xlim(x1, x2)
+axins.set_ylim(y1, y2)
+axins.set_xticklabels([])
+axins.set_yticklabels([])
+ax.indicate_inset_zoom(axins, edgecolor="black")
+mpl.xlabel('Games')
+mpl.ylabel('Reward')
+mpl.savefig('./graphs/blackjack_results.pdf')
+mpl.show()

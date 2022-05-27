@@ -2,21 +2,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 x = np.linspace(0, 10000, 10000)
-#font = {'size'   : 8}
-#plt.rc('font', **font)
-
+font = {'size'   : 12}
+plt.rc('font', **font)
 
 def plot_overestimation(name, results, color):
-    plt.fill_between(x, results[4], results[5],label=name, alpha=.3, linewidth=0, color= color)
-    plt.plot(x, results[3], linewidth=1.5, color = color)
+    plt.fill_between(x, results[4], results[5], alpha=.3, linewidth=0, color= color)
+    plt.plot(x, results[3], linewidth=2.5, label=name, color = color)
 
-
-    
 def plot(name, results, colour):
         plot_overestimation(name, results, colour)
-        plt.title(r'average $\max_{a}$ $Q(s_0,a)$ for $\gamma=0.95$')
+        plt.grid()
+        plt.xlabel('Training Steps')
+        plt.ylabel(r'$\max_{a\in\mathcal{A}}$ $Q(s_0,a)$')
         plt.axhline(y = 0.36, color = 'black', linestyle = '--')
-        plt.legend(loc='lower center', fancybox=True, ncol=7)
+        plt.legend(loc='upper right', fancybox=True)
 
 
 regular = np.load('./data/regular.npy',allow_pickle=True)
@@ -30,6 +29,5 @@ plot("$\hat{r}$", running_avg, "purple")
 fixed_alpha = np.load('./data/fixed alpha.npy',allow_pickle=True)
 plot("static a", fixed_alpha, "green")
 
-
-plt.savefig("OE_graph")
+plt.savefig("./graphs/OE_graph.pdf")
 plt.show()

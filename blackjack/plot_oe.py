@@ -1,5 +1,5 @@
 import numpy as np 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as mpl
 from scipy.stats import sem
 
 x = np.linspace(0, 100000, 100000)
